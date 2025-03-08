@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { CreateManyPokemonDto } from './dto/create-many-pokemon.dto';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -32,6 +33,11 @@ export class PokemonService {
     } catch (e: any) {
       this.handleExceptions(e);
     }
+  }
+
+  async createMany({ pokemons }: CreateManyPokemonDto) {
+    await this.pokemonModel.insertMany(pokemons);
+    return 'Pokemons successfully inserted';
   }
 
   findAll() {
@@ -79,11 +85,6 @@ export class PokemonService {
   }
 
   async remove(id: string) {
-    // const pokemon = await this.findOne(id);
-    // await pokemon.deleteOne();
-
-    // return await this.pokemonModel.findByIdAndDelete(id);
-
     const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
 
     if (deletedCount === 0) {
@@ -91,6 +92,10 @@ export class PokemonService {
     }
 
     return;
+  }
+
+  async removeAll() {
+    await this.pokemonModel.deleteMany({});
   }
 
   private handleExceptions(e: any) {
