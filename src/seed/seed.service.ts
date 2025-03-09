@@ -14,7 +14,7 @@ export class SeedService {
     await this.pokemonService.removeAll();
 
     const data = await this.http.get<PokeResponse>(
-      'https://pokeapi.co/api/v2/pokemon?limit=10',
+      'https://pokeapi.co/api/v2/pokemon?limit=150',
     );
 
     const pokemonsToInsert = data.results.map(({ name, url }) => {
